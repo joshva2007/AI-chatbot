@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NeuraFlow AI Chat - Futuristic Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --bg-main: #02030a;
+      --bg-elevated: rgba(8, 12, 32, 0.85);
+      --bg-card: rgba(12, 18, 46, 0.85);
+      --accent: #7b5cff;
+      --accent-soft: rgba(123, 92, 255, 0.25);
+      --accent-secondary: #30e5ff;
+      --border-soft: rgba(255, 255, 255, 0.12);
+      --text-main: #f5f7ff;
+      --text-muted: #a1a7d1;
+      --radius-lg: 20px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --shadow-soft: 0 28px 60px rgba(0, 0, 0, 0.8);
+      --transition-fast: 0.2s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #151935, #02030a 55%);
+      color: var(--text-main);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    /* Animated gradient background "blobs" */
+    .bg-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.45;
+      z-index: -1;
+      mix-blend-mode: screen;
+      animation: floatBlob 18s ease-in-out infinite alternate;
+    }
+
+    .bg-blob.one {
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, #7b5cff, transparent);
+      top: -80px;
+      left: -60px;
+    }
+
+    .bg-blob.two {
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, #30e5ff, transparent);
+      bottom: -120px;
+      right: -60px;
+      animation-delay: 4s;
+    }
+
+    @keyframes floatBlob {
+      0% {
+        transform: translateY(0) translateX(0) scale(1);
+      }
+      100% {
+        transform: translateY(-40px) translateX(40px) scale(1.1);
+      }
+    }
+
+    /* Layout */
+    .page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(
+        to right,
+        rgba(2, 3, 10, 0.96),
+        rgba(6, 9, 24, 0.9)
+      );
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-bar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 16px;
+      background: radial-gradient(circle at 30% 20%, #f6f3ff, #7b5cff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: #111325;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.7);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand strong {
+      font-size: 1.05rem;
+    }
+
+    .brand span {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+
+    nav ul li a {
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      transition: background var(--transition-fast),
+        border-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    nav ul li a:hover {
+      background: var(--accent-soft);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 0.7rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .nav-cta {
+      font-size: 0.8rem;
+      padding: 0.5rem 1.1rem;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      background: linear-gradient(135deg, #7b5cff, #30e5ff);
+      color: #050716;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.75);
+      transition: transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 32px rgba(0, 0, 0, 0.85);
+    }
+
+    /* Hero */
+    .hero {
+      max-width: 1200px;
+      margin: 1.8rem auto 2.6rem;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 2.3rem;
+      align-items: center;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.5rem, 3.3vw, 3.3rem);
+      line-height: 1.03;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-text h1 span {
+      background: linear-gradient(135deg, #7b5cff, #30e5ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 28rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-bottom: 1.2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .hero-meta span {
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(8, 12, 32, 0.9);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      align-items: center;
+      margin-bottom: 0.7rem;
+    }
+
+    .btn-primary,
+    .btn-outline {
+      font-size: 0.85rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: transform var(--transition-fast),
+        box-shadow var(--transition-fast), background var(--transition-fast),
+        color var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7b5cff, #30e5ff);
+      color: #050716;
+      font-weight: 600;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.9);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .hero-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    .hero-media {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      padding: 0.85rem;
+      background: linear-gradient(
+        135deg,
+        rgba(123, 92, 255, 0.25),
+        rgba(48, 229, 255, 0.25)
+      );
+      box-shadow: var(--shadow-soft);
+    }
+
+    .hero-main-panel {
+      width: 100%;
+      height: 100%;
+      border-radius: calc(var(--radius-lg) - 12px);
+      background: rgba(3, 6, 18, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(18px);
+      padding: 0.85rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.2fr);
+      gap: 0.8rem;
+    }
+
+    .hero-chat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+    }
+
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.3rem;
+    }
+
+    .chat-header span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .chat-stream {
+      flex: 1;
+      min-height: 120px;
+      max-height: 180px;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+    }
+
+    .chat-bubble {
+      max-width: 90%;
+      padding: 0.35rem 0.6rem;
+      border-radius: 10px;
+      margin-bottom: 0.3rem;
+    }
+
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: rgba(123, 92, 255, 0.15);
+      border: 1px solid rgba(123, 92, 255, 0.4);
+    }
+
+    .chat-bubble.ai {
+      align-self: flex-start;
+      background: rgba(9, 12, 30, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 0.35rem;
+      margin-top: 0.4rem;
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(8, 11, 28, 0.85);
+      color: var(--text-main);
+      padding: 0.35rem 0.7rem;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .chat-input-row button {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 0;
+      background: linear-gradient(135deg, #7b5cff, #30e5ff);
+      color: #050716;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .hero-stats {
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .stat-card {
+      border-radius: 10px;
+      padding: 0.45rem 0.6rem;
+      background: rgba(6, 10, 26, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .stat-value {
+      font-size: 0.88rem;
+    }
+
+    .hero-label {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.28rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(3, 6, 18, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .hero-label-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #30e5ff;
+    }
+
+    /* Main content */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 2.8rem;
+    }
+
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    .pill-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 0.9rem 1rem;
+      font-size: 0.85rem;
+      backdrop-filter: blur(18px);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+    }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+    }
+
+    .price-card {
+      position: relative;
+    }
+
+    .price-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.25rem;
+    }
+
+    .price-name {
+      font-size: 0.9rem;
+    }
+
+    .price-amount {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .price-amount span {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .price-features {
+      list-style: none;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 0.5rem 0 0.7rem;
+      padding: 0;
+    }
+
+    .price-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.35rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .price-dot {
+      margin-top: 0.25rem;
+      width: 4px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--accent-secondary);
+    }
+
+    .tag-badge {
+      position: absolute;
+      top: 0.7rem;
+      right: 0.8rem;
+      font-size: 0.7rem;
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(123, 92, 255, 0.2);
+      border: 1px solid rgba(123, 92, 255, 0.6);
+    }
+
+    /* API Docs */
+    .api-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 1.3rem;
+    }
+
+    .code-block {
+      font-family: "Space Grotesk", monospace;
+      font-size: 0.78rem;
+      background: rgba(4, 7, 20, 0.96);
+      border-radius: 12px;
+      padding: 0.7rem 0.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.35rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Model comparison */
+    .comparison-table {
+      width: 100%;
+      border-spacing: 0;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 0.5rem 0.4rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      text-align: left;
+    }
+
+    .comparison-table th {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .comparison-table tr:nth-child(even) {
+      background: rgba(6, 9, 24, 0.7);
+    }
+
+    /* Testimonials */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .review-card {
+      position: relative;
+      padding-top: 0.6rem;
+    }
+
+    .review-quote {
+      font-size: 0.85rem;
+      color: var(--text-main);
+      margin-bottom: 0.4rem;
+    }
+
+    .review-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .review-stars {
+      color: var(--accent-secondary);
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
+    }
+
+    /* FAQ */
+    .faq-item {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 0.55rem 0;
+    }
+
+    .faq-q {
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-a {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+      display: none;
+    }
+
+    .faq-toggle {
+      font-size: 1rem;
+      color: var(--accent-secondary);
+      margin-left: 0.4rem;
+    }
+
+    .faq-item.open .faq-a {
+      display: block;
+    }
+
+    .faq-item.open .faq-toggle {
+      transform: rotate(90deg);
+    }
+
+    /* Blog */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+    }
+
+    .blog-card {
+      font-size: 0.85rem;
+    }
+
+    .blog-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .blog-title {
+      font-size: 0.92rem;
+      margin-bottom: 0.3rem;
+    }
+
+    /* Contact & dashboard */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 1.3rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+    }
+
+    label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    input,
+    select,
+    textarea {
+      margin-top: 0.18rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(6, 9, 24, 0.96);
+      color: var(--text-main);
+      padding: 0.45rem 0.65rem;
+      font-size: 0.84rem;
+      outline: none;
+      transition: border-color var(--transition-fast),
+        box-shadow var(--transition-fast), background var(--transition-fast);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #777fa9;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(123, 92, 255, 0.4);
+      background: rgba(8, 11, 28, 0.98);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .form-status {
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+    }
+
+    .dashboard-card {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      background: rgba(3, 6, 20, 0.92);
+      backdrop-filter: blur(18px);
+      padding: 0.8rem 0.9rem;
+      font-size: 0.82rem;
+    }
+
+    .dashboard-header {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dashboard-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.6rem;
+    }
+
+    .metric {
+      padding: 0.35rem 0.4rem;
+      border-radius: 10px;
+      background: rgba(10, 14, 32, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .metric-value {
+      font-size: 0.92rem;
+    }
+
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1.2rem 1.5rem 1.5rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-align: center;
+      background: #02030a;
+    }
+
+    footer a {
+      color: var(--accent-secondary);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .api-layout,
+      .contact-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+      }
+
+      .nav-bar {
+        padding-inline: 1.1rem;
+      }
+
+      main {
+        padding-inline: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-blob one"></div>
+  <div class="bg-blob two"></div>
+
+  <div class="page-wrapper">
+    <!-- HEADER -->
+    <header>
+      <div class="nav-bar">
+        <div class="nav-left">
+          <div class="logo">NF</div>
+          <div class="brand">
+            <strong>NeuraFlow AI</strong>
+            <span>Conversational Intelligence Platform</span>
+          </div>
+        </div>
+
+        <nav>
+          <ul>
+            <li><a href="#chat">Live demo</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#api">API Docs</a></li>
+            <li><a href="#models">Models</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#blog">Blog</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-right">
+          <span class="nav-link">v1.3 • Dark mode</span>
+          <button class="nav-cta" onclick="scrollToSection('contact')">
+            Get API key
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-text">
+        <div class="pill-label">Futuristic AI chat</div>
+        <h1>
+          Ship AI assistants
+          <span>that feel human.</span>
+        </h1>
+        <p class="hero-subtitle">
+          NeuraFlow lets you embed advanced AI chat into products in minutes,
+          with glassmorphism‑ready UI, fast APIs, and enterprise‑grade observability.
+        </p>
+        <div class="hero-meta">
+          <span>Claude‑class reasoning</span>
+          <span>ChatGPT‑style UX</span>
+          <span>Latency under 400 ms (demo)</span>
+        </div>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="scrollToSection('chat')">
+            Try live chat
+          </button>
+          <button class="btn-outline" onclick="scrollToSection('pricing')">
+            View pricing
+          </button>
+        </div>
+        <div class="hero-note">
+          This demo uses front‑end JavaScript to simulate responses; connect
+          the chat panel to your own AI backend via REST or WebSockets.[web:51][web:59]
+        </div>
+      </div>
+
+      <div class="hero-media">
+        <div class="hero-main-panel">
+          <!-- Live chat demo -->
+          <div class="hero-chat" id="chat">
+            <div class="chat-header">
+              <span>Live AI chat demo</span>
+              <span style="color: var(--accent-secondary);">
+                • Online
+              </span>
+            </div>
+            <div class="chat-stream" id="chatStream">
+              <div class="chat-bubble ai">
+                Hi, I’m NeuraFlow — ask me anything about this platform.
+              </div>
+            </div>
+            <div class="chat-input-row">
+              <input
+                type="text"
+                id="chatInput"
+                placeholder="Ask NeuraFlow about pricing, APIs, or models..."
+              />
+              <button onclick="handleChatSend()" title="Send">
+                ➤
+              </button>
+            </div>
+          </div>
+
+          <!-- Mini dashboard -->
+          <div class="hero-stats">
+            <div class="stat-card">
+              <div class="stat-label">Requests today</div>
+              <div class="stat-value">124,830</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Average latency</div>
+              <div class="stat-value">320 ms</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Models online</div>
+              <div class="stat-value">Neura-Chat, Neura-Code</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-label">
+          <span class="hero-label-dot"></span>
+          Glassmorphism chat UI • Inspired by ChatGPT & Claude.[web:54][web:56]
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <main>
+      <section id="pricing">
+        <div class="pill-label">Pricing</div>
+        <h2>Pricing plans</h2>
+        <p class="section-subtitle">
+          From solo builders to enterprises, choose a plan that scales with
+          your AI traffic.[web:55]
+        </p>
+
+        <div class="pricing-grid">
+          <div class="card price-card">
+            <div class="price-header">
+              <div class="price-name">Starter</div>
+              <div class="price-amount">
+                Free
+                <span>/ 5k tokens</span>
+              </div>
+            </div>
+            <ul class="price-features">
+              <li>
+                <span class="price-dot"></span>
+                5,000 tokens / month
+              </li>
+              <li>
+                <span class="price-dot"></span>
+                Neura‑Chat‑Lite model
+              </li>
+              <li>
+                <span class="price-dot"></span>
+                Community support
+              </li>
+            </ul>
+            <button class="btn-outline" onclick="scrollToSection('contact')">
+              Start free
+            </button>
+          </div>
+
+          <div class="card price-card">
+            <span class="tag-badge">Most popular</span>
+            <div class="price-header">
+              <div class="price-name">Pro</div>
+              <div class="price-amount">
+                ₹2,499
+                <span>/ month</span>
+              </div>
+            </div>
+            <ul class="price-features">
+              <li>
+                <span class="price-dot"></span>
+                1M tokens / month
+              </li>
+              <li>
+                <span class="price-dot"></span>
+                Neura‑Chat & Neura‑Code
+              </li>
+              <li>
+                <span class="price-dot"></span>
+                Priority support & metrics
+              </li>
+            </ul>
+            <button class="btn-primary" onclick="scrollToSection('contact')">
+              Upgrade to Pro
+            </button>
+          </div>
+
+          <div class="card price-card">
+            <div class="price-header">
+              <div class="price-name">Enterprise</div>
+              <div class="price-amount">
+                Custom
+                <span>/ month</span>
+              </div>
+            </div>
+            <ul class="price-features">
+              <li>
+                <span class="price-dot"></span>
+                Unlimited tokens & SLOs
+              </li>
+              <li>
+                <span class="price-dot"></span>
+                Dedicated region & VPC
+              </li>
+              <li>
+                <span class="price-dot"></span>
+                Compliance & custom SLAs
+              </li>
+            </ul>
+            <button class="btn-outline" onclick="scrollToSection('contact')">
+              Talk to sales
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- API DOCS -->
+      <section id="api">
+        <div class="pill-label">Developers</div>
+        <h2>API documentation</h2>
+        <p class="section-subtitle">
+          A single REST endpoint to bring conversational AI into your
+          product.[web:55][web:57]
+        </p>
+
+        <div class="api-layout">
+          <div class="card">
+            <h3 style="font-size: 0.9rem; margin-bottom: 0.4rem;">
+              Quickstart
+            </h3>
+            <p class="section-subtitle" style="margin-bottom: 0.45rem;">
+              Send your first message in under a minute using a simple POST
+              request.
+            </p>
+            <div class="code-header">
+              <span>cURL example</span>
+              <span style="color: var(--accent-secondary); font-size: 0.7rem;">
+                POST /v1/chat/completions
+              </span>
+            </div>
+            <div class="code-block">
+curl -X POST https://api.neuraflow.ai/v1/chat/completions \
+  -H "Authorization: Bearer &lt;API_KEY&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "neura-chat-1",
+    "messages": [
+      {"role": "user", "content": "Hello, NeuraFlow!"}
+    ]
+  }'
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 style="font-size: 0.9rem; margin-bottom: 0.4rem;">
+              Key concepts
+            </h3>
+            <ul
+              style="
+                list-style: none;
+                font-size: 0.8rem;
+                color: var(--text-muted);
+                padding-left: 0;
+              "
+            >
+              <li>• Models: neura‑chat‑1, neura‑code‑1, neura‑embed‑1</li>
+              <li>• Authentication: Bearer API keys per project</li>
+              <li>• Rate limits: plan‑based with burst protection</li>
+              <li>• Streaming: optional, via Server‑Sent Events</li>
+            </ul>
+            <p
+              style="
+                font-size: 0.78rem;
+                color: var(--text-muted);
+                margin-top: 0.5rem;
+              "
+            >
+              This template shows how to display API docs on a marketing page;
+              connect it to your actual OpenAPI spec or docs site.[web:55]
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODEL COMPARISON -->
+      <section id="models">
+        <div class="pill-label">Models</div>
+        <h2>AI model comparison</h2>
+        <p class="section-subtitle">
+          Pick the right model for support bots, coding assistants, and
+          retrieval‑augmented apps.[web:55]
+        </p>
+
+        <div class="card">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Context</th>
+                <th>Use case</th>
+                <th>Latency (p50)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>neura‑chat‑1</td>
+                <td>32k tokens</td>
+                <td>General chat, support, docs</td>
+                <td>350 ms</td>
+              </tr>
+              <tr>
+                <td>neura‑chat‑1‑lite</td>
+                <td>16k tokens</td>
+                <td>Lightweight assistants, FAQs</td>
+                <td>210 ms</td>
+              </tr>
+              <tr>
+                <td>neura‑code‑1</td>
+                <td>64k tokens</td>
+                <td>Coding help, code review</td>
+                <td>430 ms</td>
+              </tr>
+              <tr>
+                <td>neura‑embed‑1</td>
+                <td>4k tokens</td>
+                <td>Search, RAG embeddings</td>
+                <td>120 ms</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS -->
+      <section id="testimonials">
+        <div class="pill-label">Voices</div>
+        <h2>Customer testimonials</h2>
+        <p class="section-subtitle">
+          Teams use NeuraFlow to power support, internal tools, and coding
+          copilots.
+        </p>
+
+        <div class="reviews-grid">
+          <div class="card review-card">
+            <div class="review-stars">★★★★★</div>
+            <div class="review-quote">
+              “We swapped our legacy chatbot for NeuraFlow and cut average
+              response time in half while customers thought they were chatting
+              with a human.”
+            </div>
+            <div class="review-meta">
+              <strong>Aditi • CX Lead</strong> • SaaS support
+            </div>
+          </div>
+
+          <div class="card review-card">
+            <div class="review-stars">★★★★★</div>
+            <div class="review-quote">
+              “The glassmorphism chat widget dropped right into our product.
+              The dev experience felt as clean as working with modern OpenAI
+              and Anthropic APIs.”
+            </div>
+            <div class="review-meta">
+              <strong>Karthik • Founder</strong> • Dev tools
+            </div>
+          </div>
+
+          <div class="card review-card">
+            <div class="review-stars">★★★★☆</div>
+            <div class="review-quote">
+              “We run multiple models across regions and the dashboard makes it
+              easy to see which model powers which feature in real time.”
+            </div>
+            <div class="review-meta">
+              <strong>Maya • Platform Eng</strong> • Enterprise
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq">
+        <div class="pill-label">Help</div>
+        <h2>FAQ</h2>
+        <p class="section-subtitle">
+          Answers to common questions about pricing, security, and model usage.
+        </p>
+
+        <div class="card">
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span>How is NeuraFlow different from ChatGPT?</span>
+              <span class="faq-toggle">›</span>
+            </div>
+            <div class="faq-a">
+              NeuraFlow focuses on white‑label API access and embeddable chat
+              UIs, so you can ship ChatGPT‑like assistants inside your product
+              with your own branding.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span>Can I bring my own OpenAI or Anthropic key?</span>
+              <span class="faq-toggle">›</span>
+            </div>
+            <div class="faq-a">
+              Yes; this template assumes you can proxy requests through your
+              own infra, or connect directly to external providers in your
+              backend.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span>Is this demo connected to a real model?</span>
+              <span class="faq-toggle">›</span>
+            </div>
+            <div class="faq-a">
+              Not by default. The chat box runs a mock AI in JavaScript. Replace
+              the handler with calls to your server or directly to an AI API to
+              go live.[web:51][web:59]
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOG -->
+      <section id="blog">
+        <div class="pill-label">Journal</div>
+        <h2>Product updates</h2>
+        <p class="section-subtitle">
+          Learn how teams are shipping AI chat into products and stay up to
+          date with releases.[web:52][web:60]
+        </p>
+
+        <div class="blog-grid">
+          <div class="card blog-card">
+            <div class="blog-meta">
+              July 2026 • Release notes
+            </div>
+            <div class="blog-title">
+              Introducing Neura‑Chat‑1 with 32k context
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">
+              Our latest model brings longer context windows and better
+              reasoning for enterprise chats.
+            </p>
+          </div>
+
+          <div class="card blog-card">
+            <div class="blog-meta">
+              June 2026 • Case study
+            </div>
+            <div class="blog-title">
+              How a SaaS startup shipped AI support in 7 days
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">
+              Learn how they embedded NeuraFlow’s widget and reduced support
+              tickets by 40%.
+            </p>
+          </div>
+
+          <div class="card blog-card">
+            <div class="blog-meta">
+              May 2026 • Tutorial
+            </div>
+            <div class="blog-title">
+              Building a ChatGPT‑style UI with glassmorphism
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">
+              A step‑by‑step guide to designing responsive chat layouts inspired
+              by modern AI tools.[web:54][web:56]
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT + DASHBOARD -->
+      <section id="contact">
+        <div class="pill-label">Connect</div>
+        <h2>Contact & dashboard</h2>
+        <p class="section-subtitle">
+          Request access, ask a question, or see how your AI traffic behaves in
+          real time.
+        </p>
+
+        <div class="contact-layout">
+          <!-- Contact form -->
+          <div class="card">
+            <form id="contactForm" onsubmit="handleContact(event)">
+              <label>
+                Name
+                <input
+                  type="text"
+                  id="contactName"
+                  placeholder="Your full name"
+                  required
+                />
+              </label>
+
+              <div class="field-inline" style="display: flex; gap: 0.7rem;">
+                <div style="flex: 1;">
+                  <label>
+                    Email
+                    <input
+                      type="email"
+                      id="contactEmail"
+                      placeholder="you@example.com"
+                      required
+                    />
+                  </label>
+                </div>
+                <div style="flex: 1;">
+                  <label>
+                    Company
+                    <input
+                      type="text"
+                      id="contactCompany"
+                      placeholder="Optional"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <label>
+                How can we help?
+                <select id="contactReason" required>
+                  <option value="">Select an option</option>
+                  <option>API access & keys</option>
+                  <option>Pricing & billing</option>
+                  <option>Embedding the chat UI</option>
+                  <option>Custom models / enterprise</option>
+                </select>
+              </label>
+
+              <label>
+                Message
+                <textarea
+                  id="contactMessage"
+                  placeholder="Share details about your use case..."
+                  required
+                ></textarea>
+              </label>
+
+              <button type="submit" class="btn-primary">
+                Submit
+              </button>
+              <div id="contactStatus" class="form-status"></div>
+            </form>
+          </div>
+
+          <!-- Responsive dashboard panel -->
+          <div class="dashboard-card">
+            <div class="dashboard-header">
+              <span>Realtime dashboard (demo)</span>
+              <span
+                style="
+                  font-size: 0.75rem;
+                  color: var(--accent-secondary);
+                "
+              >
+                Live
+              </span>
+            </div>
+            <div class="dashboard-metrics">
+              <div class="metric">
+                <div class="metric-label">Requests / min</div>
+                <div class="metric-value" id="metricRpm">420</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Avg. tokens / req</div>
+                <div class="metric-value" id="metricTokens">
+                  280
+                </div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Error rate</div>
+                <div class="metric-value" id="metricError">
+                  0.4%
+                </div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Active projects</div>
+                <div class="metric-value" id="metricProjects">
+                  38
+                </div>
+              </div>
+            </div>
+            <p
+              style="
+                font-size: 0.78rem;
+                color: var(--text-muted);
+                margin-top: 0.6rem;
+              "
+            >
+              Values animate locally in JavaScript as a demo. Replace them with
+              real metrics from your observability stack when you integrate your
+              backend.[web:55][web:60]
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      NeuraFlow AI • Demo futuristic AI chatbot website template • Replace
+      sample content with your own models, docs, and backend integration.[web:51][web:55]
+    </footer>
+  </div>
+
+  <!-- JS: chat demo, FAQ, contact, dashboard -->
+  <script>
+    // Smooth scroll helper
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+
+    // Simple mock AI chat logic
+    const mockReplies = [
+      "NeuraFlow is a demo platform in this template. Connect it to your own AI backend to go live.",
+      "You can customise pricing, models, and latency values directly in this HTML file.",
+      "Integrate this chat panel with your REST or WebSocket APIs to stream real AI responses.",
+      "This UI uses glassmorphism, dark mode, and gradients inspired by modern AI tools."
+    ];
+
+    function handleChatSend() {
+      const input = document.getElementById("chatInput");
+      const stream = document.getElementById("chatStream");
+      const text = input.value.trim();
+      if (!text) return;
+
+      // Add user bubble
+      const userBubble = document.createElement("div");
+      userBubble.className = "chat-bubble user";
+      userBubble.textContent = text;
+      stream.appendChild(userBubble);
+
+      input.value = "";
+
+      // Auto-scroll
+      stream.scrollTop = stream.scrollHeight;
+
+      // Mock AI reply
+      setTimeout(() => {
+        const aiBubble = document.createElement("div");
+        aiBubble.className = "chat-bubble ai";
+        const reply =
+          mockReplies[Math.floor(Math.random() * mockReplies.length)];
+        aiBubble.textContent = reply;
+        stream.appendChild(aiBubble);
+        stream.scrollTop = stream.scrollHeight;
+      }, 600);
+    }
+
+    // FAQ toggle
+    function toggleFAQ(el) {
+      const item = el.parentElement;
+      item.classList.toggle("open");
+    }
+
+    // Contact form (demo only)
+    function handleContact(event) {
+      event.preventDefault();
+      const name = document.getElementById("contactName").value.trim();
+      const status = document.getElementById("contactStatus");
+
+      if (!name) {
+        status.textContent = "Please add your name.";
+        status.style.color = "#ffb2b8";
+        return;
+      }
+
+      status.textContent =
+        "Thank you, " +
+        name +
+        ". This demo does not send emails; connect this form to your backend or a form service.";
+      status.style.color = "#c3f2c0";
+
+      document.getElementById("contactForm").reset();
+    }
+
+    // Simple dashboard metric animation (demo)
+    function wiggleMetric(id, base, delta) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const value = base + (Math.random() - 0.5) * delta;
+      if (id === "metricError") {
+        el.textContent = value.toFixed(1) + "%";
+      } else {
+        el.textContent = Math.round(value);
+      }
+    }
+
+    setInterval(() => {
+      wiggleMetric("metricRpm", 420, 40);
+      wiggleMetric("metricTokens", 280, 30);
+      wiggleMetric("metricError", 0.4, 0.3);
+      wiggleMetric("metricProjects", 38, 3);
+    }, 2000);
+  </script>
+</body>
+</html>
